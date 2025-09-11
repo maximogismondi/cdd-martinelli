@@ -1,8 +1,18 @@
 # TP1 – Mapa de desarrollo y checklist
 
-Guía de lo hecho y lo pendiente, con links a los notebooks y ejemplos de gráficos.
+* Padrón: 110119
+* Nombre completo: Gismondi Máximo
+* Corrector: Martín Stefanelli
+* Materia: Ciencia de Datos
+* Catedra: Martinelli
+* Cuatrimestre: 2do cuatrimestre 2025
+
+
+Guía de lo hecho con los links a lo hecho... los links funcionan desde [Github](https://github.com/maximogismondi/cdd-martinelli/blob/main/tps/tp1/informe.md)
 
 ## Limpieza de datos
+
+Se realizó una limpieza inicial con los datos crudos (disponibles en data/raw) para dejar los datasets listos para análisis y consultas. Los archivos limpios se encuentran en data/clean.
 
 * [Categorías](cleaning_data/categories.ipynb)
 * [Clientes](cleaning_data/customers.ipynb)
@@ -13,7 +23,7 @@ Guía de lo hecho y lo pendiente, con links a los notebooks y ejemplos de gráfi
 * [Reseñas](cleaning_data/reviews.ipynb)
 
 Notas:
-- Los .pkl en data/clean confirman la limpieza completada para cada conjunto.
+- Los .pkl se usan para mantener tipos de datos y estructuras complejas.
 
 ## Consultas
 
@@ -29,6 +39,12 @@ Notas:
 4) [Peso de inventario “stuff” por marca](querys/04_peso_inventario_stuff_por_marca.ipynb)
     Integración productos+inventario; filtro por “stuff”; peso acumulado por marca; Top marcas; variación trimestral; comparativas y correlaciones.
 
+5) [Ventas por categoría y subcategorías](querys/05_ventas_categoria.ipynb)
+    Integración productos+ítems de órdenes; revenue por producto; revenue por categoría y subcategoría; análisis de distribución.
+
+6) [Reviews por segmento de cliente](querys/06_reviews_by_customer_segment.ipynb)
+    Integración clientes+reseñas; análisis de reviews por segmento y género; distribución de ratings
+
 ## Visualizaciones según consigna (casos de uso + links)
 
 1. Una continua con una línea de tiempo
@@ -40,8 +56,8 @@ Notas:
     - [04_peso_inventario_stuff_por_marca](querys/04_peso_inventario_stuff_por_marca.ipynb)
 
 3. Una discreta con una discreta
-    - Caso de uso: segmento de cliente vs método de pago (matriz de categorías).
-    - Notebook/celda: [03_segmentos_tipo_de_pago](querys/03_segmentos_tipo_de_pago.ipynb)
+    - Caso de uso: segmento de cliente (discreta) vs rating de reviews (discreta).
+    - [06_reviews_by_customer_segment](querys/06_reviews_by_customer_segment.ipynb)
 
 4. Una continua con otra continua
     - Caso de uso: dispersión de métricas continuas de inventario/peso.
@@ -61,9 +77,5 @@ Notas:
         - [04_peso_inventario_stuff_por_marca](querys/04_peso_inventario_stuff_por_marca.ipynb)
 
 7. Una visualización que use una de las siguientes: Treemap / Sankey / Joint / Custom
-    - TODO
-
-## Próximos pasos mínimos
-
-- [ ] Añadir 1 visualización “especial” (treemap/sankey/joint/custom) sin repetir tipos. Sugerencia: Sankey en el notebook 04.
-- [ ] Dejar capturas o exportar a html/png las figuras finales clave para el informe.
+    - Caso de uso: Treemap de revenue por categoría y subcategorías.
+    - [05_ventas_categoria](querys/05_ventas_categoria.ipynb)
