@@ -1,4 +1,4 @@
-# TP1 – Mapa de desarrollo y checklist
+# TP1 – Análisis Exploratorio con Pandas
 
 * Padrón: 110119
 * Nombre completo: Gismondi Máximo
