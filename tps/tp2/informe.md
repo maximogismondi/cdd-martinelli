@@ -365,6 +365,23 @@ Resultados (Top 10):
 
 Los resultados muestran que no hay pares con alta frecuencia de compra conjunta (todos aparecen solo 2 veces), lo que sugiere que el dataset no tiene una noción de productos comúnmente comprados juntos.
 
+### Query 11 - TTFP de clientes por segmento
+
+Calcula el Tiempo Total de Primera Compra (TTFP) de clientes agrupado por segmento de cliente. El TTFP se define como la diferencia en días entre la fecha de registro del cliente y la fecha de su primera orden completada.
+
+Para evitar errores se seleccionaron por separado los clientes que tienes que no tienen ordenes de los que si y luego se muestran los resultados y la cantidad de clientes sin ordenes.
+
+Resultados:
+
+| Segmento | TTFP promedio (días) | Total clientes  | Cantidad clientes con órdenes | Cantidad clientes sin órdenes |
+| :-: | :-: | :-: | :-: | :-: |
+| BUDGET | 12.94 | 84972 | 16230 | 68742 |
+| PREMIUM | 12.79 | 86042 | 16671 | 69371 |
+| REGULAR | 12.76 | 256735 | 49669 | 207066 |
+| UNDEFINED | 12.99 | 14146 | 2749 | 11397 |
+
+Como vemos el TTFP es similar entre segmentos, rondando los 13 días, más allá de que la cantidad de clientes regulares es muy superior a los otros segmentos.
+
 ## Conclusiones
 
 El dataset es bastante grande pero no permite sacar buenas conclusiones ya que los datos parecen estar muy randomizados y no hay relaciones fuertes entre distintos conceptos.
