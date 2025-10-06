@@ -263,3 +263,108 @@ Que casualmente es igual que la cantidad de ordenes. Eso es en realidad porque l
 El primero se mueve desde 1 a 4700000 y el segundo desde 19900399 a 20000000 por lo que no hay superposición y por ende todas las ordenes quedan como que no tienen productos del top 10.
 
 ### Query 7 - Clientes inactivos
+
+Porcentaje de clientes inactivos hace más de 180 días agrupados por segmento de cliente y país.
+
+Para ellos se uso la columna de `last_login` y se consideró inactivo a aquel cliente que no haya tenido actividad en los últimos 180 días respecto a una fecha de referencia. Esta fecha de referencia se definió como 2025-06-10 para que los resultados sean reproducibles.
+
+Resultados:
+
+| Segmento | País | Inactivos | Total | Porcentaje inactivos |
+| :-: | :-: | :-: | :-: | :-: |
+| BUDGET | AUSTRALIA | 3604 | 7322 | 49.22 |
+| BUDGET | BRAZIL | 3639 | 7359 | 49.45 |
+| BUDGET | CANADA | 3557 | 7286 | 48.82 |
+| PREMIUM | AUSTRALIA | 3405 | 7265 | 46.87 |
+| PREMIUM | BRAZIL | 3662 | 7436 | 49.25 |
+| PREMIUM | CANADA | 3509 | 7325 | 47.90 |
+
+Los porcentajes de inactividad son similares entre segmentos y países, rondando el 60%, lo que sugiere una distribución uniforme de la inactividad en el dataset.
+
+La tabla completa está en el notebook correspondiente.
+
+### Query 8 - Productos desastrosos post venta
+
+Identifica productos "desastrosos" (con más del 30% de unidades retornadas) y calcula el porcentaje de estos productos por marca.
+
+**Importante:** Para que la query funcione correctamente, se tuvo que normalizar los `order_id` del dataset de `order_items` restándoles 19900398, ya que:
+
+- `orders.csv` tiene IDs desde 1 a 4700000
+- `order_items.csv` tiene IDs desde 19900399 a 20000000
+
+Sin esta normalización no habría coincidencias en el join como pasó en la Query 6.
+
+Se filtran las ordenes con estado `RETURNED` y se juntan con el detalle y se calcula por producto la cantidad total vendida y la cantidad retornada. Luego se calcula el porcentaje de retornos y se filtran los que superan el 30%.
+
+Finalmente se agrupa por marca para obtener la cantidad total de productos y la cantidad de productos desastrosos, calculando el porcentaje.
+
+Algunos resultados (ver notebook completo para la tabla completa):
+
+| Marca | Productos totales | Productos desastrosos | Porcentaje desastrosos |
+| :-: | :-: | :-: | :-: |
+| ASHLEY FURNITURE | 378 | 17 | 4.50% |
+| PENGUIN | 414 | 17 | 4.11% |
+| BLACK+DECKER | 546 | 22 | 4.03% |
+| LE CREUSET | 550 | 22 | 4.00% |
+| ETSY SHOPS | 830 | 33 | 3.98% |
+
+Hay bastante variación en el porcentaje de productos desastrosos entre marcas, pero en general la mayoría tiene un porcentaje bajo (<5%), lo que sugiere que los productos desastrosos son relativamente raros en el dataset.
+
+### Query 9 - Relevancia de autores de reseñas por país
+
+Calcula la relevancia acumulada de autores de reseñas agrupada por país. La relevancia pondera la utilidad de las reseñas (`helpful_votes`) por la popularidad del producto (ventas).
+
+**Fórmulas de relevancia:**
+- **Relevancia de producto:** `log(1 + total_ventas_producto)`
+- **Relevancia de reseña:** `helpful_votes * relevancia_producto`
+- **Relevancia de autor:** suma de todas sus reseñas
+- **Relevancia por país:** suma de todos los autores del país
+
+Esto permite identificar qué países tienen los autores más útiles, considerando tanto calidad como participación en productos populares.
+
+Resultados:
+
+| País | Relevancia total | Cantidad autores | Cantidad reseñas |
+| :-: | :-: | :-: | :-: |
+| FRANCE | 168657.51 | 1198 | 1282 |
+| JAPAN | 168540.78 | 1253 | 1348 |
+| CANADA | 167212.56 | 1237 | 1324 |
+| AUSTRALIA | 167094.58 | 1222 | 1290 |
+| BRAZIL | 162562.81 | 1197 | 1280 |
+| MEXICO | 160838.77 | 1177 | 1248 |
+| GERMANY | 157849.14 | 1187 | 1269 |
+| UK | 157830.77 | 1125 | 1208 |
+| USA | 157743.05 | 1158 | 1230 |
+| INDIA | 147406.40 | 1098 | 1166 |
+| UNDEFINED | 57029.78 | 406 | 436 |
+
+
+En este caso la cantidad de autores y reseñas suele indicar una relación lineal pero algunos países como Francia y Japón tienen una relevancia ligeramente mayor.
+
+### Query 10 - Pares de productos comprados juntos
+
+Identifica los pares de productos que son frecuentemente comprados juntos en la misma orden.
+
+La implementación genera todas las combinaciones posibles de productos por orden (sin repetición), cuenta cuántas veces aparece cada par, y devuelve los top 10 más frecuentes.
+
+**Nota importante:** Si se compran varias unidades de AMBOS productos en la misma orden, se cuenta solo una vez como par.
+
+Resultados (Top 10):
+
+| Producto 1 | Producto 2 | Veces comprados juntos |
+| :-: | :-: | :-: |
+| Progressive methodical open architecture | Universal solution-oriented hub | 2 |
+| front-line mobile core | User-centric mobile task-force | 2 |
+| Total reciprocal core | Customer-focused fresh-thinking open architecture | 2 |
+| Profound zero tolerance forecast | User-centric next generation pricing structure | 2 |
+| Stand-alone static implementation | Right-sized regional approach | 2 |
+| Business-focused didactic adapter | Monitored contextually-based Local Area Network | 2 |
+| Switchable neutral forecast | Exclusive empowering strategy | 2 |
+| USER-CENTRIC 6THGENERATION INTERNET SOLUTION | Integrated web-enabled challenge | 2 |
+| Re-engineered regional help-desk | Automated executive leverage | 2 |
+
+Los resultados muestran que no hay pares con alta frecuencia de compra conjunta (todos aparecen solo 2 veces), lo que sugiere que el dataset no tiene una noción de productos comúnmente comprados juntos.
+
+## Conclusiones
+
+El dataset es bastante grande pero no permite sacar buenas conclusiones ya que los datos parecen estar muy randomizados y no hay relaciones fuertes entre distintos conceptos.
