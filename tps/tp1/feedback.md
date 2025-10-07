@@ -1,0 +1,3 @@
+- Hacer un TOP para las categorías más comunes y no mostrar todo.
+- Agregar una categoría para aquellas que no sean hojas en la jerarquía.
+- TOPK con método de pandas en vez de order + head
