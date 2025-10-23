@@ -11,7 +11,7 @@ Para que funcionen bien los vínculos recomiendo entrar vía Github donde los mi
 
 ## Dataset
 
-Contamos con un set de datos de un e-commerce que cuenta con una serie de datasets. Los mismos deberían estar en la carpeta [../data/raw/](../data/raw/) para poder ser utilizados en las distintas querys.
+Contamos con un set de datos de un e-commerce que cuenta con una serie de datasets. Los mismos deberían estar en la carpeta [../.data/raw/](../.data/raw/) para poder ser utilizados en las distintas querys.
 
 
 ### Categorías

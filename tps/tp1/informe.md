@@ -12,7 +12,7 @@ Guía de lo hecho con los links a lo hecho... los links funcionan desde [Github]
 
 ## Limpieza de datos
 
-Se realizó una limpieza inicial con los datos crudos (disponibles en data/raw) para dejar los datasets listos para análisis y consultas. Los archivos limpios se encuentran en data/clean.
+Se realizó una limpieza inicial con los datos crudos (disponibles en .data/raw) para dejar los datasets listos para análisis y consultas. Los archivos limpios se encuentran en .data/clean.
 
 * [Categorías](cleaning_data/categories.ipynb)
 * [Clientes](cleaning_data/customers.ipynb)
