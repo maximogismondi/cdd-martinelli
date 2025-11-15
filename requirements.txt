@@ -2,3 +2,10 @@ pyspark
 pandas
 matplotlib
 seaborn
+emoji
+spacy
+wordcloud
+scikit-learn
+textblob
+tqdm
+xgboost
