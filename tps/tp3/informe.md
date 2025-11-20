@@ -645,22 +645,13 @@ Meta-Modelo (Random Forest):
 
 ## 9. Conclusiones y Lecciones Aprendidas
 
-### 9.1 Decisiones de Diseño Acertadas
+Personalmente me llevo de este TP que entrenar modelos de machine learning efectivos requiere de tener mucho conocimiento y práctica a la hora de explorar datos, diseñar features y seleccionar modelos. No me resultó nada sencillo llegar a un modelo competitivo. En lo personal siento que muchas veces no entiendo al 100% lo que hago no tengo las heurísiticas desarrolladas para saber qué camino tomar y creo que la única vuelta es seguir practicando.
 
-1. **Feature Engineering Robusto:**
-   - Lematización con Spacy mejoró generalización
-   - TF-IDF + SVD capturó contexto sin explotar dimensionalidad
-   - Mean Encoding evitó data leakage y capturó señal de keywords
+Respecto al TP en sí, la primera y 2da parte me resultaron intuitivas de realizar y entender. La parte III ya ma costó mucho más, me deje cegar por el score f1 en validation y no logré profundizar tanto como me gustaría en entender todos los hiperparámetros y en hacer un seguimietno profundo de que features estaban siendo más útiles. Termine dejando 3 modelos porque sentía que con 2 iba a estar inconpleto y al no alcanzar el objetivo de f1=0.8 en validación preferí compensarlo por este lado.
 
-2. **Pipeline Consistente:**
-   - Mismas features en todos los modelos avanzados permitió comparación justa
-   - Split estratificado mantuvo distribución de clases
+Respecto a la parte 4 nose si está OK o no hacer lo que hice... mi punto era en el feature engineering tranformar el texto en coeficientes basados en modelos simples y luego usar esos coeficientes como features para un modelo final. Me salvó muchísimo el modelo BERT ya que agarraba muchísimo el contexto del tweet y me daba una feature muy poderosa.
 
-3. **Threshold Optimization:**
-   - Optimizar threshold según F1 (no default 0.5) mejoró performance significativamente
-
-4. **Stacking:**
-   - Combinar modelos diversos (BERT, LR, Keywords) capturó diferentes aspectos del problema
+Apreiciaría mucho un feedback sobre mi TP porque en algún momento de la vida seguro que me vuelvo a encontrar con un problema similar y me gustaría tener unos buenos modelos y enfoques de referencia. También si es posible me gustaría conocer como otros resolvieron el TP y que criterios fueron usando para seleccionar features y modelos.
 
 ---
 
