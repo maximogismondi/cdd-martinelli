@@ -191,7 +191,7 @@ Se usa **Spacy** para lematizar el texto, reduciendo palabras a su forma raíz (
 - **Accuracy (Validation):** 0.7413
 - **Precision:** 0.6946
 - **Recall:** 0.7095
-- **Score Kaggle:** #TODO (pendiente subir submission)
+- **Score Kaggle:** 0.72632
 
 **Análisis de Coeficientes:**
 
@@ -254,7 +254,7 @@ Todos los modelos avanzados comparten el **mismo pipeline de features** para com
 - **F1-Score (Validation):** 0.7564
 - **Threshold optimizado:** 0.370
 - **ROC AUC:** 0.85
-- **Score Kaggle:** #TODO (pendiente subir submission)
+- **Score Kaggle:** 0.76248
 
 **Feature Importance:**
 
@@ -300,7 +300,7 @@ Todos los modelos avanzados comparten el **mismo pipeline de features** para com
 - **F1-Score (Validation):** 0.7698
 - **Threshold optimizado:** 0.420
 - **ROC AUC:** 0.87
-- **Score Kaggle:** #TODO (pendiente subir submission)
+- **Score Kaggle:** 0.77719
 
 **Feature Importance:**
 
@@ -327,19 +327,20 @@ Todos los modelos avanzados comparten el **mismo pipeline de features** para com
 
 **Notebook:** [`3_models/neural_network.ipynb`](./3_models/neural_network.ipynb)
 
-**¿Por qué una Red Neuronal?**
-- **Aprende representaciones:** Los embeddings capturan semántica de palabras automáticamente
-- **Arquitectura híbrida:** Combina texto (embeddings) con meta-features (numéricas)
-- **Flexibilidad:** Puede modelar relaciones no-lineales complejas
+**¿Por qué una Red Neuronal con Embeddings?**
+- **Aprende representaciones semánticas:** Los embeddings capturan que palabras similares están cerca geométricamente
+- **Complementa TF-IDF:** Mientras TF-IDF es bag-of-words, los embeddings aprenden significados
+- **Híbrida:** Combina texto (vía embeddings) con meta-features numéricas
+- **Eficiente:** Arquitectura simple pero efectiva para textos cortos como tweets
 
 **Arquitectura:**
 
 El modelo tiene dos ramas que se combinan:
 
 1. **Rama de Texto:**
-   - TextVectorization (convierte texto a secuencias)
-   - Embedding (50 dims) - aprende representaciones de palabras
-   - GlobalAveragePooling1D - reduce secuencias a vector fijo
+   - TextVectorization (convierte texto a secuencias de enteros)
+   - Embedding (50 dims) - vectores semánticos entrenables
+   - GlobalAveragePooling1D - promedia todos los embeddings de palabras
    - Dense(64) + ReLU
    - Dropout(0.5)
 
@@ -363,6 +364,7 @@ El modelo tiene dos ramas que se combinan:
 - **Embedding dim:** 50
 - **Optimizer:** Adam (lr=0.001)
 - **Loss:** Binary Crossentropy
+- **Metric:** AUC
 - **Callbacks:** EarlyStopping (patience=5), ReduceLROnPlateau
 
 **Resultado:**
@@ -370,18 +372,13 @@ El modelo tiene dos ramas que se combinan:
 - **F1-Score (Validation):** 0.7834
 - **Threshold optimizado:** 0.610
 - **ROC AUC:** 0.88
-- **Score Kaggle:** #TODO (pendiente subir submission)
+- **Score Kaggle:** 0.79650
 
 **Análisis:**
-- La rama de embeddings permite capturar contexto semántico
-- La rama numérica complementa con estadísticas del tweet
-- **Permutation Importance (Meta Features - Top 10):**
-  1. `keyword_encoded`: ~0.055 (dominante)
-  2. `word_count`: ~0.008
-  3. `keyword_other`: ~0.002
-  4. `keyword_windstorm`: ~0.001
-  5. `keyword_hazardous`: ~0.001
-  6. Resto de keywords y features numéricas: <0.001
+- La arquitectura híbrida aprovecha tanto embeddings de texto como meta-features
+- GlobalAveragePooling promedia los embeddings, capturando el "sentimiento general" del tweet
+- Score de 0.79650 es sólido, pero el ensemble de stacking (0.83726) sigue siendo superior
+- **Insight:** Para textos cortos como tweets, los modelos de ensemble con features diversas superan a una sola arquitectura profunda
 
 ---
 
@@ -601,12 +598,12 @@ Meta-Modelo (Random Forest):
 ## 7. Comparación de Modelos
 
 | Modelo | F1-Score (CV) | F1-Score (Val) | Threshold | ROC AUC | Score Kaggle |
-|--------|---------------|----------------|-----------|---------|--------------|
+|--------|---------------|----------------|-----------|---------|--------------||
 | Random (Baseline) | N/A | 0.4565 | 0.5 | 0.52 | 0.51854 |
 | Logistic Regression | 0.6970 | 0.7020 | 0.5538 | 0.81 | 0.72632 |
-| Random Forest | 0.7248 | 0.7564 | 0.370 | 0.85 | Pendiente (mejorado) |
-| XGBoost | 0.7525 | 0.7698 | 0.420 | 0.87 | Pendiente (mejorado) |
-| Neural Network | N/A | 0.7834 | 0.610 | 0.88 | 0.77137 |
+| Random Forest | 0.7248 | 0.7564 | 0.370 | 0.85 | 0.76248 |
+| XGBoost | 0.7525 | 0.7698 | 0.420 | 0.87 | 0.77719 |
+| Neural Network (Híbrida) | N/A | 0.7834 | 0.610 | 0.88 | 0.79650 |
 | **4 Features (Stacking)** | **0.7956** | **0.7959** | **0.4991** | **0.89** | **0.83726** |
 
 
