@@ -4,3 +4,5 @@
 *.pkl
 
 venv/
+
+!tps/tp3/.data/submission/*.csv
