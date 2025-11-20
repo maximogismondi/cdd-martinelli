@@ -355,7 +355,7 @@ El modelo tiene dos ramas que se combinan:
    - Dropout(0.5)
    - Dense(1) + Sigmoid - clasificación binaria
 
-*Nota: Al ejecutar el notebook, se genera automáticamente el diagrama visual de la arquitectura en `neural_network_architecture.png` usando `tf.keras.utils.plot_model()`.*
+*Nota: Al ejecutar el notebook, se genera automáticamente el diagrama visual de la arquitectura en `neural_network_architecture.png` usando `tf.keras.utils.plot_model()`. También está [aquí](./3_models/neural_network_architecture.png) para referencia.*
 
 **Configuración:**
 - **Vocabulario:** MAX_TOKENS = 10,000
