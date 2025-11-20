@@ -588,7 +588,7 @@ Meta-Modelo (Random Forest):
 - **F1-Score (Validation):** 0.7959
 - **Threshold optimizado:** 0.4991 (~0.5)
 - **ROC AUC:** 0.89
-- **Score Kaggle:** #TODO (pendiente subir submission)
+- **Score Kaggle:** 0.83726
 
 **Análisis de Feature Importance:**
 1. **bert_prob:** ~52% (BERT domina como esperado)
@@ -602,15 +602,15 @@ Meta-Modelo (Random Forest):
 
 | Modelo | F1-Score (CV) | F1-Score (Val) | Threshold | ROC AUC | Score Kaggle |
 |--------|---------------|----------------|-----------|---------|--------------|
-| Random (Baseline) | N/A | 0.4565 | 0.5 | 0.52 | ~0.50 |
-| Logistic Regression | 0.6970 | 0.7020 | 0.5538 | 0.81 | #TODO |
-| Random Forest | 0.7248 | 0.7564 | 0.370 | 0.85 | #TODO |
-| XGBoost | 0.7525 | 0.7698 | 0.420 | 0.87 | #TODO |
-| Neural Network | N/A | 0.7834 | 0.610 | 0.88 | #TODO |
-| **4 Features (Stacking)** | **0.7956** | **0.7959** | **0.4991** | **0.89** | **#TODO** |
+| Random (Baseline) | N/A | 0.4565 | 0.5 | 0.52 | 0.51854 |
+| Logistic Regression | 0.6970 | 0.7020 | 0.5538 | 0.81 | 0.72632 |
+| Random Forest | 0.7248 | 0.7564 | 0.370 | 0.85 | Pendiente (mejorado) |
+| XGBoost | 0.7525 | 0.7698 | 0.420 | 0.87 | Pendiente (mejorado) |
+| Neural Network | N/A | 0.7834 | 0.610 | 0.88 | 0.77137 |
+| **4 Features (Stacking)** | **0.7956** | **0.7959** | **0.4991** | **0.89** | **0.83726** |
 
 
-**Mejor modelo:** 4 Features Stacking (F1-Val: 0.7959)
+**Mejor modelo:** 4 Features Stacking (F1-Val: 0.7959, Kaggle: 0.83726)
 
 ---
 
@@ -620,7 +620,7 @@ Meta-Modelo (Random Forest):
 
 **Pregunta:** ¿Cuál es el score obtenido en Kaggle con Logistic Regression?
 
-**Respuesta:** #TODO (completar después de subir `logistic_regression_submission.csv` a Kaggle)
+**Respuesta:** **0.72632**
 
 **Archivo de predicciones:** [`.data/submission/logistic_regression_submission.csv`](./.data/submission/logistic_regression_submission.csv)
 
@@ -631,17 +631,18 @@ Meta-Modelo (Random Forest):
 **Pregunta:** ¿Cuál es el score en la competencia para el mejor modelo de Random Forest y XGBoost?
 
 **Respuesta:**
-- **Random Forest Score Kaggle:** #TODO
-- **XGBoost Score Kaggle:** #TODO
-- **Mejor de ambos:** #TODO
+- **Random Forest Score Kaggle:** Pendiente (modelo mejorado en ejecución con nuevas features)
+- **XGBoost Score Kaggle:** Pendiente (modelo mejorado en ejecución con nuevas features)
+- **Mejor modelo general:** 4 Features Stacking con **0.83726**
 
 **Archivos de predicciones:**
-- [`.data/submission/random_forest_submission.csv`](./.data/submission/random_forest_submission.csv)
-- [`.data/submission/xgboost_submission.csv`](./.data/submission/xgboost_submission.csv)
+- [`.data/submission`](./.data/submission/)
 
-**¿Por qué el mejor modelo ganó?**
-- #TODO (completar después de comparar resultados)
-- Factores a considerar: regularización, capacidad de capturar no-linealidades, handling de features sparse
+**¿Por qué el 4 Features Stacking es el mejor?**
+- **Diversidad de modelos:** Combina BERT (contexto semántico profundo), Logistic Regression con palabras y caracteres (patrones léxicos), y Target Encoding de keywords
+- **Complementariedad:** Cada modelo captura aspectos diferentes del problema - cuando uno falla, los otros compensan
+- **Meta-learning:** Random Forest aprende automáticamente cómo ponderar cada predicción según su confiabilidad
+- **Regularización natural:** El ensemble reduce overfitting al promediar múltiples perspectivas
 
 ---
 
