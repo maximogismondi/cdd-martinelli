@@ -1,11 +1,29 @@
+# Core data processing
 pyspark
 pandas
+numpy
 matplotlib
 seaborn
+
+# Natural Language Processing
 emoji
 spacy
 wordcloud
+
+# Machine Learning
 scikit-learn
+xgboost
+tensorflow
+
+# Transformers (para modelo de 4 features con BERT)
+torch
+transformers
+
+# Visualization and utilities
 textblob
 tqdm
-xgboost
+pillow
+
+# Graphviz para plot_model de Keras (requiere instalación de graphviz por separado)
+pydot
+graphviz
