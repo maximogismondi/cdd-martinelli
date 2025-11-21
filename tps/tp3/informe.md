@@ -390,24 +390,25 @@ Todos los modelos avanzados comparten el **mismo pipeline de features** para com
 
 **Análisis:** XGBoost supera a Random Forest (+1.3 puntos de F1) gracias a su enfoque secuencial de corrección de errores. El modelo concentra aún más importancia en Text SVD (90% vs 84% de RF).
 
-### 4.3 Red Neuronal Híbrida (Embedding + Dense)
+### 4.3 Red Neuronal Híbrida (Word2Vec + Dense)
 
 **Notebook:** [`3_models/neural_network.ipynb`](./3_models/neural_network.ipynb)
 
-**¿Por qué una Red Neuronal con Embeddings?**
-- **Aprende representaciones semánticas:** Los embeddings capturan que palabras similares están cerca geométricamente
-- **Complementa TF-IDF:** Mientras TF-IDF es bag-of-words, los embeddings aprenden significados
-- **Híbrida:** Combina texto (vía embeddings) con meta-features numéricas
-- **Eficiente:** Arquitectura simple pero efectiva para textos cortos como tweets
+**¿Por qué una Red Neuronal con Word2Vec?**
+- **Semántica pre-aprendida:** Word2Vec de Google News (3M palabras, 300 dims) captura relaciones semánticas sin necesidad de entrenamiento adicional
+- **Complementa TF-IDF:** Mientras TF-IDF es bag-of-words, Word2Vec aprende significados contextuales
+- **Híbrida:** Combina texto (vía Word2Vec pre-entrenado) con meta-features numéricas
+- **Eficiente:** Menos parámetros entrenables, converge más rápido que embeddings desde cero
 
 **Arquitectura:**
 
 El modelo tiene dos ramas que se combinan:
 
-1. **Rama de Texto:**
-   - TextVectorization (convierte texto a secuencias de enteros)
-   - Embedding (50 dims) - vectores semánticos entrenables
-   - GlobalAveragePooling1D - promedia todos los embeddings de palabras
+1. **Rama de Texto (Word2Vec):**
+   - Vectores pre-entrenados de 300 dims (Google News Word2Vec)
+   - Promedio de vectores de palabras por tweet
+   - Dense(128) + ReLU
+   - Dropout(0.5)
    - Dense(64) + ReLU
    - Dropout(0.5)
 
@@ -421,31 +422,36 @@ El modelo tiene dos ramas que se combinan:
    - Concatenate - une ambas ramas
    - Dense(64) + ReLU
    - Dropout(0.5)
+   - Dense(32) + ReLU
+   - Dropout(0.3)
    - Dense(1) + Sigmoid - clasificación binaria
 
 *Nota: Al ejecutar el notebook, se genera automáticamente el diagrama visual de la arquitectura en `neural_network_architecture.png` usando `tf.keras.utils.plot_model()`. También está [aquí](./3_models/neural_network_architecture.png) para referencia.*
 
 **Configuración:**
-- **Vocabulario:** MAX_TOKENS = 10,000
-- **Longitud de secuencia:** SEQUENCE_LENGTH = 40
-- **Embedding dim:** 50
+- **Word2Vec Model:** word2vec-google-news-300 (Gensim)
+- **Vector dimension:** 300
 - **Optimizer:** Adam (lr=0.001)
 - **Loss:** Binary Crossentropy
 - **Metric:** AUC
-- **Callbacks:** EarlyStopping (patience=5), ReduceLROnPlateau
+- **Callbacks:** EarlyStopping (patience=7), ReduceLROnPlateau
 
 **Resultado:**
-- **Epochs entrenados:** ~15-20 (con EarlyStopping)
-- **F1-Score (Validation):** 0.7834
-- **Threshold optimizado:** 0.610
-- **ROC AUC:** 0.88
-- **Score Kaggle:** 0.79650
+- **Epochs entrenados:** ~15-25 (con EarlyStopping)
+- **F1-Score (Validation):** 0.8024
+- **Threshold optimizado:** 0.400
+- **Accuracy:** 0.8293
+- **Precision:** 0.7976
+- **Recall:** 0.8073
+- **ROC AUC:** 0.89
+- **Score Kaggle:** 0.80018
 
 **Análisis:**
-- La arquitectura híbrida aprovecha tanto embeddings de texto como meta-features
-- GlobalAveragePooling promedia los embeddings, capturando el "sentimiento general" del tweet
-- Score de 0.79650 es sólido, pero el ensemble de stacking (0.83726) sigue siendo superior
-- **Insight:** Para textos cortos como tweets, los modelos de ensemble con features diversas superan a una sola arquitectura profunda
+- ✅ **Objetivo alcanzado:** F1 > 0.8 (logrado con 0.8024)
+- La arquitectura híbrida aprovecha tanto semántica pre-entrenada como meta-features
+- Word2Vec promediado captura el significado general del tweet sin overfitting
+- ROC AUC de 0.89 indica excelente capacidad de discriminación
+- **Insight:** Word2Vec pre-entrenado ofrece excelentes resultados, superando embeddings entrenables desde cero
 
 ---
 
@@ -670,11 +676,12 @@ Meta-Modelo (Random Forest):
 | Logistic Regression | 0.6970 | 0.7020 | 0.5538 | 0.81 | 0.72632 |
 | Random Forest | 0.7248 | 0.7564 | 0.370 | 0.85 | 0.76248 |
 | XGBoost | 0.7525 | 0.7698 | 0.420 | 0.87 | 0.77719 |
-| Neural Network (Híbrida) | N/A | 0.7834 | 0.610 | 0.88 | 0.79650 |
+| **Neural Network (Word2Vec)** | **N/A** | **0.8024** | **0.400** | **0.89** | **0.80018** |
 | **4 Features (Stacking)** | **0.7956** | **0.7959** | **0.4991** | **0.89** | **0.83726** |
 
 
-**Mejor modelo:** 4 Features Stacking (F1-Val: 0.7959, Kaggle: 0.83726)
+**Mejor modelo (Validación):** Neural Network con Word2Vec (F1-Val: 0.8024)
+**Mejor modelo (Kaggle):** 4 Features Stacking (Kaggle: 0.83726)
 
 ---
 
