@@ -165,8 +165,75 @@ Se usa **Spacy** para lematizar el texto, reduciendo palabras a su forma raíz (
 
 **Estrategia:** `DummyClassifier` con estrategia "stratified" (predice aleatoriamente según distribución de clases).
 
-**Resultado:**
-- **F1-Score:** 0.4565
+Clasificador que predice aleatoriamente con una variable aleatoria Bernoulli con $p = \text{proporción de clases en el set de entrenamiento}$.
+
+SKLearn tiene un `DummyClassifier` que implementa esto con la estrategia `stratified`.
+
+#### Análisis Teórico del F1-Score
+
+El resultado teórico de la métrica $F_1$ debe ser cercano a la proporción de clases $p$, ya que:
+
+$$
+F_1 = \text{Media Armónica}(\text{Precision}, \text{Recall})
+$$
+
+$$
+\text{Precision} = \frac{TP}{TP + FP}
+\quad
+\text{Recall} = \frac{TP}{TP + FN}
+$$
+
+Si $P(\text{Positive}) = p$ ($\text{proporción de positivos en el dataset}$), las métricas convergen asintóticamente ($\approx$) a:
+
+$$
+\begin{gathered}
+TP \approx p \cdot p \cdot N \\
+FP \approx (1 - p) \cdot p \cdot N \\
+FN \approx p \cdot (1 - p) \cdot N
+\end{gathered}
+$$
+
+**Precision:**
+
+$$
+\begin{align*}
+\text{Precision} &= \frac{p \cdot p \cdot N}{p \cdot p \cdot N + (1 - p) \cdot p \cdot N} \\
+&= \frac{p^2 N}{p^2 N + (p - p^2) N} \\
+&= \frac{p^2}{p^2 + p \cdot (1 - p)} \\
+&= \frac{p^2}{p^2 + p - p^2} \\
+&= \frac{p^2}{p} \\
+&= p
+\end{align*}
+$$
+
+**Recall:**
+
+$$
+\begin{align*}
+\text{Recall} &= \frac{p \cdot p \cdot N}{p \cdot p \cdot N + p \cdot (1 - p) \cdot N} \\
+&= \frac{p^2 N}{p^2 N + (p - p^2) N} \\
+&= \frac{p^2}{p^2 + p \cdot (1 - p)} \\
+&= \frac{p^2}{p^2 + p - p^2} \\
+&= \frac{p^2}{p} \\
+&= p
+\end{align*}
+$$
+
+**F1-Score:**
+
+Finalmente, la métrica $F_1$ converge a $p$:
+
+$$
+\begin{align*}
+F_1 &= 2 \cdot \frac{\text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}} \\
+&= 2 \cdot \frac{p \cdot p}{p + p} \\
+&= 2 \cdot \frac{p^2}{2p} \\
+&= p
+\end{align*}
+$$
+
+**Resultado Experimental:**
+- **F1-Score:** 0.4565 (cercano a $p \approx 0.43$, proporción de desastres en train)
 - **ROC AUC:** 0.52 (línea diagonal, sin capacidad predictiva real)
 
 **Justificación:** Establece el piso mínimo. Cualquier modelo debe superar este baseline.
@@ -598,7 +665,7 @@ Meta-Modelo (Random Forest):
 ## 7. Comparación de Modelos
 
 | Modelo | F1-Score (CV) | F1-Score (Val) | Threshold | ROC AUC | Score Kaggle |
-|--------|---------------|----------------|-----------|---------|--------------||
+|--------|---------------|----------------|-----------|---------|--------------|
 | Random (Baseline) | N/A | 0.4565 | 0.5 | 0.52 | 0.51854 |
 | Logistic Regression | 0.6970 | 0.7020 | 0.5538 | 0.81 | 0.72632 |
 | Random Forest | 0.7248 | 0.7564 | 0.370 | 0.85 | 0.76248 |
