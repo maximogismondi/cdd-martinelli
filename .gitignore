@@ -3,6 +3,9 @@
 *.csv
 *.pkl
 
+*.mp4
+tps/tp4/.data
+
 venv/
 
 !tps/tp3/.data/submission/*.csv
