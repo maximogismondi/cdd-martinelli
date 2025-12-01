@@ -7,6 +7,7 @@ Este proyecto implementa un sistema de limpieza de frames de video usando redes 
 ### 1. Preparación de datos (`prepare_data.py`)
 
 Genera el dataset a partir de videos:
+
 - Extrae frames de videos
 - Aplica manchas aleatorias (reproducibles por seed basada en nombre del video)
 - Guarda frames limpios y sucios
@@ -14,16 +15,17 @@ Genera el dataset a partir de videos:
 
 ```bash
 # Generar dataset con configuración por defecto
-python prepare_data.py
+python3 prepare_data.py
 
 # Personalizar manchas
-python prepare_data.py --frame-size 128 --num-blobs 3 --min-radius 30 --max-radius 60
+python3 prepare_data.py --frame-size 128 --num-blobs 3 --min-radius 30 --max-radius 60
 
 # Ver todas las opciones
-python prepare_data.py --help
+python3 prepare_data.py --help
 ```
 
 **Estructura de salida:**
+
 ```
 .data/
 ├── raw_videos/          # Videos originales
@@ -44,6 +46,7 @@ Entrena un modelo que considera la dimensión temporal usando secuencias de fram
 **Arquitecturas disponibles:**
 
 1. **LSTM + CNN** (más ligero, recomendado):
+
    - CNN (TimeDistributed) extrae características espaciales de cada frame
    - LSTM captura dependencias temporales entre frames
    - Decoder reconstruye el frame limpio
@@ -54,19 +57,20 @@ Entrena un modelo que considera la dimensión temporal usando secuencias de fram
 
 ```bash
 # Entrenamiento básico con LSTM+CNN
-python train_model.py --model-type lstm_cnn --epochs 50 --batch-size 8
+python3 train_model.py --model-type lstm_cnn --epochs 50 --batch-size 8
 
 # Entrenamiento con ConvLSTM
-python train_model.py --model-type convlstm --epochs 50 --batch-size 4
+python3 train_model.py --model-type convlstm --epochs 50 --batch-size 4
 
 # Personalizar secuencia temporal
-python train_model.py --sequence-length 7 --learning-rate 0.0005
+python3 train_model.py --sequence-length 7 --learning-rate 0.0005
 
 # Ver todas las opciones
-python train_model.py --help
+python3 train_model.py --help
 ```
 
 **Parámetros importantes:**
+
 - `--sequence-length`: Número de frames consecutivos (default: 5)
   - Más frames = más contexto temporal pero más memoria
 - `--model-type`: `lstm_cnn` (más rápido) o `convlstm` (más potente)
@@ -74,6 +78,7 @@ python train_model.py --help
 - `--val-split`: Proporción de videos para validación (default: 0.2)
 
 **Salida:**
+
 ```
 models/
 ├── best_model_lstm_cnn.keras       # Mejor modelo (checkpoint)
@@ -88,24 +93,25 @@ Aplica el modelo entrenado para limpiar frames de videos.
 
 ```bash
 # Procesar todos los videos
-python inference.py \
+python3 inference.py \
   --model-path models/best_model_lstm_cnn.keras \
   --config-path models/config_lstm_cnn.json
 
 # Procesar un video específico
-python inference.py \
+python3 inference.py \
   --model-path models/best_model_lstm_cnn.keras \
   --config-path models/config_lstm_cnn.json \
   --video-name video1
 
 # Guardar comparaciones (dirty | predicción | limpio)
-python inference.py \
+python3 inference.py \
   --model-path models/best_model_lstm_cnn.keras \
   --config-path models/config_lstm_cnn.json \
   --save-comparison
 ```
 
 **Salida:**
+
 ```
 predictions/
 ├── video1/
@@ -122,9 +128,11 @@ predictions/
 El modelo no procesa frames individuales, sino **secuencias de frames consecutivos**:
 
 1. **Entrada**: Secuencia de N frames sucios consecutivos
+
    - Ejemplo con `sequence_length=5`: frames [t-2, t-1, t, t+1, t+2]
 
 2. **Procesamiento**:
+
    - **CNN**: Extrae características espaciales de cada frame
    - **LSTM/ConvLSTM**: Captura patrones temporales (movimiento, cambios)
 
@@ -132,6 +140,7 @@ El modelo no procesa frames individuales, sino **secuencias de frames consecutiv
    - Predice el frame en tiempo `t` usando contexto temporal
 
 **Ventajas de usar contexto temporal:**
+
 - Reduce ruido usando información de frames vecinos
 - Detecta mejor áreas estáticas vs. dinámicas
 - Más robusto que procesar frames aislados
@@ -151,17 +160,17 @@ pip install -r requirements.txt
 
 ```bash
 # 1. Preparar datos (coloca videos en .data/raw_videos/)
-python prepare_data.py --frame-size 128 --num-blobs 3
+python3 prepare_data.py --frame-size 128 --num-blobs 3
 
 # 2. Entrenar modelo
-python train_model.py \
+python3 train_model.py \
   --model-type lstm_cnn \
   --sequence-length 5 \
   --epochs 50 \
   --batch-size 8
 
 # 3. Hacer predicciones con comparaciones
-python inference.py \
+python3 inference.py \
   --model-path models/best_model_lstm_cnn.keras \
   --config-path models/config_lstm_cnn.json \
   --save-comparison
@@ -173,11 +182,13 @@ python inference.py \
 
 ### Ajuste de hiperparámetros
 
-- **Sequence length**: 
+- **Sequence length**:
+
   - Corto (3-5): Menos memoria, entrenamiento más rápido
   - Largo (7-10): Más contexto temporal, mejor para escenas complejas
 
 - **Batch size**:
+
   - Depende de la memoria GPU/CPU
   - ConvLSTM necesita más memoria que LSTM+CNN
 
@@ -188,18 +199,21 @@ python inference.py \
 ### Troubleshooting
 
 **Error de memoria:**
+
 ```bash
 # Reducir batch size o sequence length
-python train_model.py --batch-size 4 --sequence-length 3
+python3 train_model.py --batch-size 4 --sequence-length 3
 ```
 
 **Entrenamiento lento:**
+
 ```bash
 # Usar LSTM+CNN en vez de ConvLSTM
-python train_model.py --model-type lstm_cnn
+python3 train_model.py --model-type lstm_cnn
 ```
 
 **Resultados no satisfactorios:**
+
 - Aumentar `--epochs` (50-100)
 - Aumentar `--sequence-length` (7-10)
 - Probar con manchas más/menos agresivas en `prepare_data.py`

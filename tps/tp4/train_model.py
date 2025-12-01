@@ -283,7 +283,6 @@ def load_datasets(dirty_dir: Path, clean_dir: Path, val_split: float = 0.2):
     train_clean = clean_videos[:num_train]
     val_dirty = dirty_videos[num_train:]
     val_clean = clean_videos[num_train:]
-
     print(f"Videos de entrenamiento: {num_train}")
     print(f"Videos de validación: {num_val}")
 
